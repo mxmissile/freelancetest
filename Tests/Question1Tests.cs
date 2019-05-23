@@ -4,11 +4,6 @@ using WebApp.App;
 
 namespace Tests
 {
-
-    // notes tests require .net core 2.2 2.2.5 runtime to run
-
-
-
     public class Question1Tests
     {
         [Test]
