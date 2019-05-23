@@ -1,0 +1,96 @@
+﻿@page
+@model WebApp.Pages.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="form-group">
+    <label for="A">A</label>
+    <input type="text" name="A" id="A" class="form-control" value="10" />
+</div>
+
+<div class="form-group">
+    <label for="B">B</label>
+    <input type="text" name="B" id="B" class="form-control" value="10" />
+</div>
+
+<input type="button" value="Do Math" class="btn btn-primary" id="do-math" />
+
+<div class="alert alert-danger" id="message-alert" style="display: none; margin: 50px;"></div>
+
+<div class="modal fade" id="resultsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Do Math Results</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-4">Developer Name</div>
+                    <div class="col-8"><input type="text" id="DeveloperName" class="form-control form-control-sm" disabled="disabled"  /></div>
+                </div>
+                <div class="row">
+                    <div class="col-4">Today's Date</div>
+                    <div class="col-8"><input type="text" id="TodaysDate" class="form-control form-control-sm" disabled="disabled" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-4">Result</div>
+                    <div class="col-8"><input type="text" id="Result" class="form-control form-control-sm" disabled="disabled" /></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+
+    <script>
+
+        $(function () {
+
+            const alert = $("#message-alert");
+            const url = "question-4/do-math";
+
+
+            $("#do-math").click(function() {
+                const toPost = { a: $("#A").val(), b: $("#B").val() };
+                alert.hide();
+                
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: toPost,
+
+                    success: function(result) {
+
+                        if (result.success === true) {
+
+                            $("#DeveloperName").val(result.developerName);
+                            $("#TodaysDate").val(result.todaysDate);
+                            $("#Result").val(result.result);
+
+                            $("#resultsModal").modal("show");
+                        } else {
+                            
+                            alert.text(result.message);
+                            alert.show();
+                        }
+                    },
+
+                    fail: function(jqxhr, textStatus, errorThrown) {
+                        alert.text(errorThrown);
+                        alert.show();
+                    }
+                });
+            });
+        });
+
+    </script>
+}
